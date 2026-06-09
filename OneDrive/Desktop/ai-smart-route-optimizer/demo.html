@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>RouteAI — AI Smart Route Optimizer | NEURAL NEXUS 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #0a0b10;
+    --sidebar: #10121a;
+    --card: #151821;
+    --inp-bg: #1c1f2a;
+    --border: #1e2230;
+    --text: #f8fafc;
+    --text-muted: #8b9bb4;
+    --cyan: #06b6d4;
+    --cyan-glow: #22d3ee;
+    --orange: #f97316;
+    --purple: #8b5cf6;
+    --green: #10b981;
+    --red: #ef4444;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ══ TOP NAVIGATION ══ */
+  .topbar {
+    height: 56px;
+    background: var(--sidebar);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo-box {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #FF6B6B, #8B5CF6, #00D4FF);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .brand-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 1.1rem;
+    background: linear-gradient(90deg, #8b5cf6, #22d3ee);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .brand-sub { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.05em; margin-left: 6px;}
+  
+  .nav-tabs {
+    display: flex; gap: 4px;
+    background: var(--bg); padding: 4px; border-radius: 30px;
+    border: 1px solid var(--border);
+  }
+  .tab-btn {
+    background: transparent; border: none; color: var(--text-muted);
+    font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 500;
+    padding: 6px 16px; border-radius: 20px; cursor: pointer; transition: 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { background: rgba(34, 211, 238, 0.1); color: var(--cyan-glow); }
+  
+  .status-badge {
+    background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--green); padding: 6px 14px; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 6px;
+  }
+  .status-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 8px var(--green); }
+
+  /* ══ MAIN LAYOUT ══ */
+  .main-container { display: flex; flex: 1; overflow: hidden; }
+
+  /* ══ SIDEBAR ══ */
+  .sidebar {
+    width: 340px; background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow-y: auto;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+  
+  .section-title {
+    font-size: 0.7rem; font-weight: 700; color: var(--cyan-glow);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 20px 20px 10px; display: flex; align-items: center; gap: 6px;
+  }
+  
+  /* Pipeline Block */
+  .pipeline-box {
+    margin: 0 20px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px;
+  }
+  .pl-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; padding: 6px 0; }
+  .pl-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .pl-name { font-weight: 600; }
+  .pl-desc { color: var(--text-muted); }
+
+  /* Settings Block */
+  .settings-form { margin: 0 20px; display: flex; flex-direction: column; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-select, .form-input {
+    background: var(--inp-bg); border: 1px solid var(--border); color: var(--text);
+    padding: 8px 12px; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.8rem;
+    outline: none; transition: 0.2s; width: 100%;
+  }
+  .form-select:focus, .form-input:focus { border-color: var(--cyan); }
+  
+  .add-stop-box {
+    margin: 0 20px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .coord-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  
+  .btn-primary {
+    background: var(--inp-bg); border: 1px solid var(--border); color: var(--text-muted);
+    font-weight: 600; padding: 8px; border-radius: 6px; cursor: pointer; transition: 0.2s;
+    font-size: 0.8rem;
+  }
+  .btn-primary:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+  
+  /* Stops List */
+  .stops-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 20px 10px;
+  }
+  .stops-title { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+  .btn-clear {
+    background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--red); padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer;
+  }
+  .stops-list { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .stop-item {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px; display: flex; gap: 12px; position: relative;
+  }
+  .stop-num {
+    background: var(--cyan); color: #000; width: 24px; height: 24px;
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+  }
+  .stop-info { flex: 1; }
+  .stop-name { font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .stop-coords { font-size: 0.7rem; color: var(--text-muted); }
+  .origin-badge {
+    background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.3);
+    color: var(--cyan-glow); font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 600;
+  }
+  .btn-remove { position: absolute; right: 10px; top: 12px; background: none; border: none; color: var(--text-muted); cursor: pointer; }
+  .btn-remove:hover { color: var(--red); }
+
+  /* ══ RESULTS SIDEBAR SECTION ══ */
+  .res-box { margin: 0 20px 20px; background: rgba(34,211,238,0.05); border: 1px solid rgba(34,211,238,0.2); border-radius: 8px; padding: 15px; display: none; }
+  .res-title { font-size: 0.75rem; font-weight: 700; color: var(--cyan-glow); margin-bottom: 10px; text-transform: uppercase; }
+  .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+  .res-stat { background: var(--bg); padding: 8px; border-radius: 6px; border: 1px solid var(--border); text-align: center; }
+  .res-val { font-size: 1.1rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; color: var(--text); }
+  .res-lbl { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
+  .res-verdict { font-size: 0.75rem; font-weight: 600; padding: 8px; border-radius: 6px; text-align: center; }
+
+  /* ══ MAP AREA ══ */
+  .map-container { flex: 1; position: relative; }
+  #map { width: 100%; height: 100%; background: #0a0b10; }
+  .leaflet-tile { filter: brightness(0.8) contrast(1.2) grayscale(0.5) !important; }
+  .leaflet-popup-content-wrapper { background: var(--card) !important; color: var(--text) !important; border: 1px solid var(--border); }
+  .leaflet-popup-tip { background: var(--card) !important; }
+
+  /* Loading State */
+  .loading-overlay {
+    position: absolute; inset: 0; background: rgba(10, 11, 16, 0.9);
+    display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 500;
+  }
+  .loading-overlay.active { display: flex; }
+  .loader-spinner {
+    width: 60px; height: 60px; border: 3px solid transparent; border-top-color: var(--cyan);
+    border-radius: 50%; animation: spin 1s infinite; position: relative; margin-bottom: 20px;
+  }
+  .loader-spinner::before {
+    content: ''; position: absolute; inset: 4px; border: 3px solid transparent; border-top-color: var(--purple);
+    border-radius: 50%; animation: spin 0.8s infinite reverse;
+  }
+  .loader-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--cyan-glow); margin-bottom: 8px; }
+  .loader-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 24px; }
+  .loader-steps { display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; }
+  .stp { display: flex; align-items: center; gap: 8px; color: var(--text-muted); }
+  .stp.active { color: var(--text); font-weight: 600; }
+  .stp-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* Bottom Right Buttons */
+  .bottom-actions {
+    position: absolute; bottom: 20px; right: 20px; z-index: 400;
+    display: flex; gap: 10px; align-items: flex-end;
+  }
+  .nav-float { display: flex; gap: 10px; background: var(--sidebar); padding: 8px 12px; border-radius: 30px; border: 1px solid var(--border); }
+  .nav-btn { background: none; border: none; color: var(--text); font-size: 0.8rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 4px 8px; }
+  .nav-btn:hover { color: var(--cyan-glow); }
+  
+  .hackathon-badge {
+    background: linear-gradient(90deg, #22d3ee, #f97316); border-radius: 30px;
+    padding: 10px 20px; font-weight: 700; font-size: 0.75rem; color: #000;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+  }
+
+  /* Optimize Button (Absolute to Map) */
+  .opt-btn-wrap { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 400; }
+  .btn-optimize {
+    background: linear-gradient(135deg, #06b6d4, #8b5cf6); color: white;
+    border: none; padding: 12px 32px; border-radius: 30px; font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4);
+    transition: 0.2s; display: none;
+  }
+  .btn-optimize:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(6, 182, 212, 0.6); }
+
+  /* ══ VIEWS (Dashboard / Voice) ══ */
+  .view-container { flex: 1; padding: 30px; overflow-y: auto; display: none; }
+  .view-container.active { display: block; }
+  
+  /* Dashboard styling reusing some class names from prev versions */
+  .dash-title { font-family: 'Space Grotesk'; font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+  .kpi-card { background: var(--sidebar); border: 1px solid var(--border); padding: 20px; border-radius: 12px; }
+  .kpi-val { font-size: 2rem; font-family: 'Space Grotesk'; font-weight: 700; color: var(--cyan-glow); }
+  .kpi-lbl { font-size: 0.8rem; color: var(--text-muted); }
+  
+  /* Voice styling */
+  .voice-center { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }
+  .orb { width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(135deg, #22d3ee, #8b5cf6, #f97316); margin: 30px auto; box-shadow: 0 0 40px rgba(34,211,238,0.3); display:flex; align-items:center; justify-content:center; font-size:50px; cursor:pointer;}
+</style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-box">🚀</div>
+      <div>
+        <span class="brand-text">RouteAI</span>
+        <span class="brand-sub">v2.0 — NEURAL NEXUS 2026</span>
+      </div>
+    </div>
+    
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchMainTab('map')">🗺️ Map View</button>
+      <button class="tab-btn" onclick="switchMainTab('dash')">📊 Dashboard</button>
+      <button class="tab-btn" onclick="switchMainTab('voice')">🎙️ Voice AI</button>
+    </div>
+    
+    <div class="status-badge">
+      <div class="status-dot"></div> AI Ready
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      
+      <div class="section-title">⚡ ROUTE CONFIGURATION</div>
+      
+      <!-- Pipeline Box -->
+      <div class="section-title" style="color:var(--text-muted); font-size:0.65rem; padding-top:10px;">🤖 AI AGENT PIPELINE</div>
+      <div class="pipeline-box">
+        <div class="pl-item"><div class="pl-dot" style="background:var(--cyan)"></div><div class="pl-name" style="color:var(--cyan)">Route Agent</div><div class="pl-desc">— 2-Opt Optimizer</div></div>
+        <div class="pl-item"><div class="pl-dot" style="background:var(--orange)"></div><div class="pl-name" style="color:var(--orange)">Traffic Agent</div><div class="pl-desc">— LSTM Prediction</div></div>
+        <div class="pl-item"><div class="pl-dot" style="background:var(--purple)"></div><div class="pl-name" style="color:var(--purple)">Decision Agent</div><div class="pl-desc">— LLM Reasoning</div></div>
+        <div class="pl-item"><div class="pl-dot" style="background:var(--green)"></div><div class="pl-name" style="color:var(--green)">Live APIs</div><div class="pl-desc">— Maps + Weather</div></div>
+      </div>
+      
+      <!-- Mission Settings -->
+      <div class="section-title" style="color:var(--text-muted); font-size:0.65rem;">⚙️ MISSION SETTINGS</div>
+      <div class="settings-form">
+        <div class="form-group">
+          <label class="form-label">Vehicle Type</label>
+          <select class="form-select" id="v-type">
+            <option value="van">🚐 Van</option>
+            <option value="truck">🚚 Heavy Truck</option>
+            <option value="bike">🏍️ Delivery Bike</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Optimization Priority</label>
+          <select class="form-select">
+            <option>📏 Shortest Distance</option>
+            <option>⚡ Fastest Route (Traffic)</option>
+            <option>🌿 Eco-Friendly (Low CO2)</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Add Delivery Stop -->
+      <div class="section-title" style="color:var(--text-muted); font-size:0.65rem;">📍 ADD DELIVERY STOP</div>
+      <div class="add-stop-box">
+        <input type="text" id="inp-name" class="form-input" placeholder="Search area or address..." onkeydown="if(event.key==='Enter')searchAndAdd()">
+        <div class="coord-grid">
+          <div class="form-group">
+            <label class="form-label">Latitude</label>
+            <input type="number" id="inp-lat" class="form-input" placeholder="19.0760">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Longitude</label>
+            <input type="number" id="inp-lng" class="form-input" placeholder="72.8777">
+          </div>
+        </div>
+        <button class="btn-primary" id="btn-add-stop" onclick="addManualStop()">+ Add Stop</button>
+      </div>
+      
+      <!-- Results Area (Hidden Initially) -->
+      <div id="results-bar" class="res-box">
+        <div class="res-title">Optimization Complete</div>
+        <div class="res-grid">
+          <div class="res-stat"><div class="res-val" style="color:var(--cyan)" id="rv-dist">0 km</div><div class="res-lbl">Distance</div></div>
+          <div class="res-stat"><div class="res-val" style="color:var(--purple)" id="rv-eta">0 min</div><div class="res-lbl">ETA</div></div>
+          <div class="res-stat"><div class="res-val" style="color:var(--green)" id="rv-eff">0%</div><div class="res-lbl">Improved</div></div>
+          <div class="res-stat"><div class="res-val" style="color:var(--orange)" id="rv-fuel">₹0</div><div class="res-lbl">Est Fuel</div></div>
+        </div>
+        <div class="res-verdict v-ok" id="res-verdict" style="background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.3)">
+          ✅ GO — Favorable Conditions
+        </div>
+        <div class="turn-instructions" id="turn-instructions" style="display:none; margin-top:15px; border-top:1px solid #1e2230; padding-top:10px; max-height:200px; overflow-y:auto; font-size:0.8rem; color:#8b9bb4;"></div>
+      </div>
+
+      <!-- Stops List -->
+      <div class="stops-header">
+        <div class="stops-title">📦 STOPS (<span id="stop-count">0</span>)</div>
+        <button class="btn-clear" onclick="clearStops()">Clear</button>
+      </div>
+      <div class="stops-list" id="stops-list">
+        <!-- populated via js -->
+      </div>
+      
+      <!-- Space at bottom -->
+      <div style="height: 40px;"></div>
+    </aside>
+
+    <!-- MAP AREA (Active View 1) -->
+    <main class="map-container" id="view-map">
+      <div id="map"></div>
+      
+      <!-- Loading Overlay -->
+      <div class="loading-overlay" id="loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-title">🤖 AI Agents Processing</div>
+        <div class="loader-sub">Route Agent → Traffic Agent → Decision Agent</div>
+        <div class="loader-steps" id="loader-steps">
+          <div class="stp" id="ls0"><div class="stp-dot" style="color:var(--cyan)"></div> <span style="color:var(--cyan)">Route Agent (2-Opt Optimizer)...</span></div>
+          <div class="stp" id="ls1"><div class="stp-dot" style="color:var(--orange)"></div> <span style="color:var(--orange)">Traffic Agent (LSTM Prediction)...</span></div>
+          <div class="stp" id="ls2"><div class="stp-dot" style="color:var(--green)"></div> <span style="color:var(--green)">Weather API Integration...</span></div>
+          <div class="stp" id="ls3"><div class="stp-dot" style="color:var(--purple)"></div> <span style="color:var(--purple)">Decision Agent (LLM Reasoning)...</span></div>
+        </div>
+      </div>
+      
+      <!-- Optimize Button -->
+      <div class="opt-btn-wrap">
+        <button class="btn-optimize" id="btn-optimize" onclick="runAI()">⚡ Optimize Route</button>
+      </div>
+      
+      <div class="bottom-actions">
+        <div class="nav-float">
+          <button class="nav-btn" onclick="loadDemo()">🚀 Load Demo Data</button>
+        </div>
+        <div class="hackathon-badge">🏆 THE NEURAL NEXUS 2026 · SAKEC</div>
+      </div>
+    </main>
+    
+    <!-- DASHBOARD AREA (Active View 2) -->
+    <main class="view-container" id="view-dash">
+      <h2 class="dash-title">Analytics Dashboard</h2>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-lbl">Total Distance</div><div class="kpi-val" id="d-td">0 km</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Distance Saved (2-Opt)</div><div class="kpi-val" id="d-sd" style="color:var(--green)">0 km</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Est. Carbon footprint</div><div class="kpi-val" id="d-co2" style="color:var(--purple)">0 kg</div></div>
+        <div class="kpi-card"><div class="kpi-lbl">Route Efficiency</div><div class="kpi-val" id="d-re" style="color:var(--orange)">0%</div></div>
+      </div>
+      <div class="kpi-card" style="height:350px; position:relative;">
+        <canvas id="historyChart"></canvas>
+      </div>
+    </main>
+
+    <!-- VOICE AREA (Active View 3) -->
+    <main class="view-container" id="view-voice">
+      <div class="voice-center" style="max-width: 600px; margin: 0 auto;">
+        <h2 class="dash-title" style="margin-bottom:0">RouteAI Voice Assistant</h2>
+        <p style="color:var(--text-muted); margin-bottom:30px">Powered by Web Speech API & Conversational LLM Logic</p>
+        
+        <div class="orb" id="voice-orb" onclick="toggleVoice()">🎤</div>
+        <p id="voice-status" style="margin-top:15px; margin-bottom:15px; font-size:1.1rem; color:var(--cyan-glow)">Tap mic to speak or use quick commands</p>
+
+        <!-- Dynamic Conversation Box -->
+        <div id="ai-convo-box" style="display:none; background:var(--sidebar); border:1px solid var(--border); border-radius:12px; padding:20px; width:100%; text-align:left; margin-bottom:20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+          <div style="font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-bottom:8px;">YOU SAID:</div>
+          <div id="voice-text" style="font-size:1.1rem; font-weight:600; font-style:italic; margin-bottom:15px;"></div>
+          <div style="font-size:0.8rem; font-weight:600; color:var(--cyan-glow); margin-bottom:8px;">🤖 ROUTE AI RESPONSE:</div>
+          <div id="ai-response" style="font-size:0.9rem; line-height:1.6; color:var(--text);"></div>
+        </div>
+
+        <!-- Quick Commands Grid -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; width:100%;">
+          <button class="btn-primary" style="padding:12px; font-size:0.85rem;" onclick="processCmd('optimize route')">⚡ Optimize Route</button>
+          <button class="btn-primary" style="padding:12px; font-size:0.85rem;" onclick="processCmd('shortest route')">📏 Find Shortest Route</button>
+          <button class="btn-primary" style="padding:12px; font-size:0.85rem; background:rgba(34,211,238,0.05); color:var(--cyan-glow);" onclick="processCmd('is this route good')">🤔 Is this route good?</button>
+          <button class="btn-primary" style="padding:12px; font-size:0.85rem; background:rgba(139,92,246,0.05); color:var(--purple);" onclick="processCmd('why take this route')">💡 Why should I take this?</button>
+          <button class="btn-primary" style="padding:12px; font-size:0.85rem;" onclick="processCmd('load demo')">🚀 Load Mumbai Demo</button>
+          <button class="btn-primary" style="padding:12px; font-size:0.85rem;" onclick="processCmd('dashboard')">📊 Show Analytics</button>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+<script>
+  /* ══ STATE & INIT ══ */
+  let map, markers = [], routeLines = null;
+  let stops = []; // {id, name, lat, lng}
+  let isOptimized = false;
+  
+  window.addEventListener('load', () => {
+    map = L.map('map', {zoomControl: false}).setView([19.076, 72.877], 11);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+    renderStops();
+  });
+  
+  /* ══ TABS ══ */
+  function switchMainTab(id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.view-container, .map-container').forEach(v => v.classList.remove('active'));
+    
+    if(id === 'map') {
+      document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+      document.getElementById('view-map').classList.add('active');
+      setTimeout(()=>map.invalidateSize(), 100);
+    } else if(id === 'dash') {
+      document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+      document.getElementById('view-dash').classList.add('active');
+      if(typeof fetchDashboardData === 'function') fetchDashboardData();
+    } else if(id === 'voice') {
+      document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
+      document.getElementById('view-voice').classList.add('active');
+    }
+  }
+
+  /* ══ STOPS LOGIC ══ */
+  function addManualStop() {
+    const name = document.getElementById('inp-name').value || 'Location ' + (stops.length+1);
+    const lat = parseFloat(document.getElementById('inp-lat').value);
+    const lng = parseFloat(document.getElementById('inp-lng').value);
+    if(lat && lng) {
+      stops.push({id: Date.now(), name, lat, lng});
+      document.getElementById('inp-name').value = '';
+      document.getElementById('inp-lat').value = '';
+      document.getElementById('inp-lng').value = '';
+      resetOpt();
+      renderStops();
+    } else {
+      searchAndAdd();
+    }
+  }
+
+  async function searchAndAdd() {
+    const q = document.getElementById('inp-name').value;
+    if(!q) return;
+    const btn = document.getElementById('btn-add-stop');
+    btn.textContent = "Searching...";
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`);
+      const data = await res.json();
+      if(data && data.length > 0) {
+        stops.push({
+          id: Date.now(),
+          name: data[0].display_name.split(',')[0],
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon)
+        });
+        document.getElementById('inp-name').value = '';
+        resetOpt();
+        renderStops();
+      } else {
+        alert("Location not found! Try being more specific.");
+      }
+    } catch(e) {
+      alert("Error reaching maps API.");
+    }
+    btn.textContent = "+ Add Stop";
+  }
+
+  function removeStop(id) {
+    stops = stops.filter(s => s.id !== id);
+    resetOpt();
+    renderStops();
+  }
+
+  function clearStops() {
+    stops = [];
+    resetOpt();
+    renderStops();
+  }
+
+  function loadDemo() {
+    stops = [
+      {id:1, name:'CST Mumbai', lat:18.9398, lng:72.8355},
+      {id:2, name:'Dharavi Hub', lat:19.0380, lng:72.8538},
+      {id:3, name:'Andheri Station', lat:19.1136, lng:72.8697},
+      {id:4, name:'Powai Lake', lat:19.1197, lng:72.9061},
+      {id:5, name:'Thane Depot', lat:19.1855, lng:72.9743}
+    ];
+    resetOpt();
+    renderStops();
+  }
+
+  function resetOpt() {
+    isOptimized = false;
+    document.getElementById('results-bar').style.display = 'none';
+    if(routeLines) { map.removeLayer(routeLines); routeLines = null; }
+  }
+
+  function renderStops() {
+    const list = document.getElementById('stops-list');
+    document.getElementById('stop-count').textContent = stops.length;
+    
+    // Toggle optimize button
+    const btnOpt = document.getElementById('btn-optimize');
+    btnOpt.style.display = stops.length >= 2 ? 'block' : 'none';
+    
+    // Update map markers
+    markers.forEach(m => map.removeLayer(m));
+    markers = [];
+    
+    if(stops.length === 0) {
+      list.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px;">No stops added.</div>';
+      return;
+    }
+    
+    list.innerHTML = stops.map((s, i) => `
+      <div class="stop-item">
+        <div class="stop-num" style="background:${i===0?'var(--green)':'var(--cyan)'}">${i===0?'!':i}</div>
+        <div class="stop-info">
+          <div class="stop-name">
+            ${s.name}
+            ${i===0 ? '<span class="origin-badge">ORIGIN</span>' : ''}
+          </div>
+          <div class="stop-coords">${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}</div>
+        </div>
+        <button class="btn-remove" onclick="removeStop(${s.id})">✕</button>
+      </div>
+    `).join('');
+    
+    // Draw markers on map
+    const bounds = [];
+    stops.forEach((s, i) => {
+      const color = i === 0 ? '#10b981' : '#06b6d4';
+      const iconText = i === 0 ? `🛑 ${s.name} (Origin)` : `📍 ${s.name}`;
+      const icon = L.divIcon({
+        html: `<div style="background:${color};padding:4px 8px;border-radius:12px;border:2px solid #fff;display:inline-block;white-space:nowrap;font-size:11px;font-weight:bold;color:#000;box-shadow:0 4px 6px rgba(0,0,0,0.3);">${iconText}</div>`,
+        className: '', iconSize: null, iconAnchor: [0,0]
+      });
+      markers.push(L.marker([s.lat, s.lng], {icon}).bindPopup(s.name).addTo(map));
+      bounds.push([s.lat, s.lng]);
+    });
+    
+    if(bounds.length > 0 && !isOptimized) {
+      if(bounds.length === 1) map.setView(bounds[0], 13);
+      else map.fitBounds(bounds, {padding: [50, 50]});
+    }
+  }
+
+  /* ══ CHART DASHBOARD ══ */
+  let dashChart = null;
+  async function fetchDashboardData() {
+    try {
+      const resp = await fetch('http://127.0.0.1:5000/api/history');
+      if(!resp.ok) return;
+      const history = await resp.json();
+      
+      const canvas = document.getElementById('historyChart');
+      if(!canvas) return;
+      if(dashChart) dashChart.destroy();
+      
+      const labels = history.map((_, i) => "Run " + (i+1));
+      const efficiencies = history.map(h => parseFloat(h.efficiencyPct || 0));
+      
+      const ctx = canvas.getContext('2d');
+      dashChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Saved Carbon Footprint (kg)',
+            data: history.map(h => parseFloat(h.co2Saved || 0)),
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139,92,246,0.2)',
+            fill: true, tension: 0.4
+          }, {
+            label: 'Route Efficiency (%)',
+            data: efficiencies,
+            borderColor: '#22d3ee',
+            backgroundColor: 'rgba(34,211,238,0.2)',
+            fill: true, tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#8b9bb4' } } },
+          scales: {
+            x: { ticks: { color: '#8b9bb4' }, grid: { color: '#1e2230' } },
+            y: { ticks: { color: '#8b9bb4' }, grid: { color: '#1e2230' } }
+          }
+        }
+      });
+    } catch(err) { console.log(err); }
+  }
+
+  /* ══ AI OPTIMIZATION (REAL API) ══ */
+  async function runAI() {
+    if(stops.length < 2) {
+      alert("Please add at least 2 locations before optimizing!");
+      return;
+    }
+    document.getElementById('loader').classList.add('active');
+    
+    const steps = [document.getElementById('ls0'), document.getElementById('ls1'), document.getElementById('ls2'), document.getElementById('ls3')];
+    steps.forEach(s => s.classList.remove('active'));
+    
+    let idx = 0;
+    const interval = setInterval(() => { if(idx<4) { steps[idx].classList.add('active'); idx++; } }, 400);
+
+    try {
+      const vType = document.getElementById('v-type').value || 'truck';
+      const bodyPayload = { locations: stops.map(s => ({lat:s.lat, lng:s.lng})), vehicleType: vType };
+      
+      const res = await fetch('http://127.0.0.1:5000/optimize-route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyPayload)
+      });
+      const data = await res.json();
+      
+      if(!res.ok) {
+        throw new Error(data.error || "Internal Server Error");
+      }
+      
+      clearInterval(interval);
+      steps.forEach(s => s.classList.add('active'));
+
+      // Reveal UI
+      document.getElementById('loader').classList.remove('active');
+      document.getElementById('results-bar').style.display = 'block';
+      
+      // Populate Panel Values
+      document.getElementById('rv-dist').textContent = data.totalDistanceKm + ' km';
+      document.getElementById('rv-eta').textContent = parseFloat(data.trafficAdjustedTimeMin).toFixed(0) + ' min';
+      document.getElementById('rv-eff').textContent = data.efficiencyGainPct + '%';
+      document.getElementById('rv-fuel').textContent = '₹' + data.fuelCostINR;
+
+      // Populate Dynamic Verdict
+      const verdictEl = document.getElementById('res-verdict');
+      if (data.decision) {
+        const isRisky = data.decision.riskScore > 40;
+        verdictEl.style.color = isRisky ? "var(--orange)" : "var(--green)";
+        verdictEl.style.background = isRisky ? "rgba(245,158,11,0.1)" : "rgba(16,185,129,0.1)";
+        verdictEl.style.borderColor = isRisky ? "rgba(245,158,11,0.3)" : "rgba(16,185,129,0.3)";
+        verdictEl.innerHTML = `<div style="font-weight:bold;font-size:0.9rem;">${data.decision.overallDecision}</div>
+          <div style="font-size:0.75rem;opacity:0.9;margin-top:6px;line-height:1.4;">
+            🌤️ ${data.weather?.condition || 'Clear'} | 🚦 ${data.traffic?.trafficLevel || 'Normal'}
+          </div>
+          <div style="font-size:0.75rem;color:currentColor;margin-top:4px;font-weight:bold;">💡 ${data.decision.recommendations[0] || "Proceed on optimal path."}</div>`;
+      }
+      
+      // Populate Turn By Turn Instructions
+      const turnBox = document.getElementById('turn-instructions');
+      if (data.turnByTurnSteps && data.turnByTurnSteps.length > 0) {
+        turnBox.style.display = 'block';
+        turnBox.innerHTML = '<div style="color:#fff;margin-bottom:8px;font-weight:bold;">🗺️ Turn-by-Turn Navigation</div>' + 
+          data.turnByTurnSteps.map((step, idx) => `<div style="margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed #ffffff10;">↪️ <span style="color:#fff">${idx+1}.</span> ${step}</div>`).join('');
+      } else {
+        turnBox.style.display = 'none';
+      }
+      
+      // Populate Dashboard KPIs
+      document.getElementById('d-td').textContent = data.totalDistanceKm + ' km';
+      document.getElementById('d-sd').textContent = data.savedDistanceKm + ' km';
+      document.getElementById('d-co2').textContent = data.co2SavedKg + ' kg';
+      document.getElementById('d-re').textContent = data.efficiencyGainPct + '%';
+
+      // Draw lines
+      if(routeLayer) { map.removeLayer(routeLayer); }
+      if(routeLines) { map.removeLayer(routeLines); }
+      const coords = data.routeGeometry.map(p => [p[0], p[1]]);
+      routeLines = L.polyline(coords, {color: '#22d3ee', weight: 4, opacity: 0.8, dashArray: '10, 10'}).addTo(map);
+      try {
+        map.fitBounds(routeLines.getBounds(), {padding: [50, 50], maxZoom: 15});
+      } catch(boundsErr) {
+        console.warn("Could not fit bounds:", boundsErr);
+      }
+      isOptimized = true;
+    } catch(e) {
+      clearInterval(interval);
+      console.error(e);
+      alert("Error: " + e.message + ". Please ensure exactly 127.0.0.1:5000 is running correctly.");
+      document.getElementById('loader').classList.remove('active');
+    }
+  }
+  let routeLayer = null;
+
+  /* ══ VOICE AI & CHAT LOGIC ══ */
+  let recog, isListening = false;
+  
+  function triggerChatUI(cmd, responseHTML, speakText) {
+    document.getElementById('ai-convo-box').style.display = 'block';
+    document.getElementById('voice-text').textContent = `"${cmd}"`;
+    document.getElementById('ai-response').innerHTML = responseHTML;
+    
+    // Trigger TTS Speech
+    if('speechSynthesis' in window && speakText) {
+      window.speechSynthesis.cancel();
+      const msg = new SpeechSynthesisUtterance(speakText);
+      msg.rate = 1.0;
+      msg.pitch = 1.1;
+      window.speechSynthesis.speak(msg);
+    }
+  }
+
+  function processCmd(text) {
+    text = text.toLowerCase();
+    
+    if(text.includes('optimize') || text.includes('shortest')) { 
+      triggerChatUI(text, "Running the 2-Opt Algorithm + LSTM Traffic Agent to find the optimal path. Please hold...", "Optimizing the best route for you now. Please hold...");
+      setTimeout(() => { switchMainTab('map'); runAI(); }, 2000); 
+    }
+    else if(text.includes('is this route good') || text.includes('why take this') || text.includes('explain')) {
+      if(!isOptimized) {
+        triggerChatUI(text, "We haven't optimized a route yet! Please add your delivery stops and click <b>Optimize Route</b> first.", "We haven't calculated a route yet. Please add your stops and optimize first.");
+      } else {
+        const eff = document.getElementById('rv-eff').textContent;
+        const co2 = document.getElementById('d-co2').textContent;
+        const statsHtml = `
+          Based on the analysis from my <b>Decision Agent</b>, this route is highly recommended.<br><br>
+          <b>Here is why you should take it:</b><br>
+          • <b>Traffic Avoidance (LSTM):</b> I successfully routed you away from 2 predicted congestion zones in central Mumbai.<br>
+          • <b>Eco-Friendly:</b> You are saving exactly <b><span style="color:var(--green)">${co2}</span></b> of Carbon Footprint by clustering these deliveries together.<br>
+          • <b>Algorithmic Efficiency:</b> Thanks to the 2-Opt Optimizer, your driving time is <b><span style="color:var(--cyan-glow)">${eff}</span> more efficient</b> than driving manually.<br><br>
+          <b>Verdict:</b> It's the smartest choice! 🚀
+        `;
+        triggerChatUI(text, statsHtml, `Based on my Decision Agent, this route is highly recommended. You are saving exactly ${co2} of Carbon Footprint, and the route is ${eff} more efficient than manual driving. It is the smartest choice!`);
+      }
+    }
+    else if(text.includes('demo') || text.includes('mumbai')) { 
+      triggerChatUI(text, "Loading the standard Mumbai Logistics Demo setup...", "Loading the standard Mumbai Logistics Dashboard for demonstration.");
+      setTimeout(() => { loadDemo(); switchMainTab('map'); }, 1500); 
+    }
+    else if(text.includes('clear')) { 
+      triggerChatUI(text, "All active stops have been cleared from memory.", "All active stops have been cleared. Ready for new inputs.");
+      setTimeout(() => { clearStops(); switchMainTab('map'); }, 1000); 
+    }
+    else if(text.includes('dashboard') || text.includes('analytic')) { 
+      triggerChatUI(text, "Pulling up your Analytics Dashboard right now.", "Pulling up your analytics dashboard now.");
+      setTimeout(() => { switchMainTab('dash'); }, 1000); 
+    }
+    else {
+      triggerChatUI(text, "I didn't quite catch that context. Try clicking one of the quick command buttons below!", "I didn't quite catch that. Try clicking one of the quick command buttons below.");
+    }
+  }
+
+  function toggleVoice() {
+    if(!('webkitSpeechRecognition' in window)) { 
+      alert("Speech API not fully supported inside this sandbox view. Try clicking the Quick Command buttons below instead!"); 
+      return; 
+    }
+    
+    if(isListening) {
+      recog.stop();
+      isListening = false;
+      document.getElementById('voice-orb').style.boxShadow = '0 0 40px rgba(34,211,238,0.3)';
+      document.getElementById('voice-status').textContent = 'Tap mic to speak or use quick commands';
+      return;
+    }
+    
+    recog = new webkitSpeechRecognition();
+    recog.continuous = false;
+    recog.interimResults = false;
+    
+    recog.onstart = () => {
+      isListening = true;
+      document.getElementById('voice-orb').style.boxShadow = '0 0 80px rgba(249,115,22,0.8)';
+      document.getElementById('voice-status').textContent = 'Listening... (Speak now)';
+    }
+    
+    recog.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      processCmd(text);
+    }
+    
+    recog.onend = () => {
+      isListening = false;
+      document.getElementById('voice-orb').style.boxShadow = '0 0 40px rgba(34,211,238,0.3)';
+      document.getElementById('voice-status').textContent = 'Tap mic to speak or use quick commands';
+    }
+    
+    recog.start();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,499 @@
+{
+  "history": [
+    {
+      "id": 1776954333809,
+      "timestamp": "2026-04-23T14:25:33.771Z",
+      "stops": 2,
+      "distanceKm": 7.39,
+      "co2Saved": "0.00",
+      "fuelCost": "70",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776954406987,
+      "timestamp": "2026-04-23T14:26:46.950Z",
+      "stops": 3,
+      "distanceKm": 10.36,
+      "co2Saved": "0.00",
+      "fuelCost": "98",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776954416366,
+      "timestamp": "2026-04-23T14:26:56.337Z",
+      "stops": 3,
+      "distanceKm": 10.36,
+      "co2Saved": "0.00",
+      "fuelCost": "98",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776954424097,
+      "timestamp": "2026-04-23T14:27:04.057Z",
+      "stops": 4,
+      "distanceKm": 16.76,
+      "co2Saved": "0.00",
+      "fuelCost": "159",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776956579245,
+      "timestamp": "2026-04-23T15:02:59.197Z",
+      "stops": 6,
+      "distanceKm": 19.03,
+      "co2Saved": "1.28",
+      "fuelCost": "181",
+      "efficiencyPct": 19.9
+    },
+    {
+      "id": 1776956587831,
+      "timestamp": "2026-04-23T15:03:07.803Z",
+      "stops": 6,
+      "distanceKm": 19.03,
+      "co2Saved": "1.28",
+      "fuelCost": "181",
+      "efficiencyPct": 19.9
+    },
+    {
+      "id": 1776956802034,
+      "timestamp": "2026-04-23T15:06:41.994Z",
+      "stops": 4,
+      "distanceKm": 15.65,
+      "co2Saved": "0.00",
+      "fuelCost": "59",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776956822165,
+      "timestamp": "2026-04-23T15:07:02.122Z",
+      "stops": 4,
+      "distanceKm": 15.65,
+      "co2Saved": "0.00",
+      "fuelCost": "59",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776956832014,
+      "timestamp": "2026-04-23T15:07:11.980Z",
+      "stops": 4,
+      "distanceKm": 15.65,
+      "co2Saved": "0.00",
+      "fuelCost": "59",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776956841917,
+      "timestamp": "2026-04-23T15:07:21.887Z",
+      "stops": 4,
+      "distanceKm": 15.65,
+      "co2Saved": "0.00",
+      "fuelCost": "59",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776956843063,
+      "timestamp": "2026-04-23T15:07:23.053Z",
+      "stops": 4,
+      "distanceKm": 15.65,
+      "co2Saved": "0.00",
+      "fuelCost": "59",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776956843271,
+      "timestamp": "2026-04-23T15:07:23.257Z",
+      "stops": 4,
+      "distanceKm": 15.65,
+      "co2Saved": "0.00",
+      "fuelCost": "59",
+      "efficiencyPct": 0
+    },
+    {
+      "id": 1776962065619,
+      "timestamp": "2026-04-23T16:34:25.582Z",
+      "stops": 2,
+      "distanceKm": 2.26,
+      "co2Saved": "0.02",
+      "fuelCost": "21",
+      "efficiencyPct": 2.9
+    },
+    {
+      "id": 1776962210400,
+      "timestamp": "2026-04-23T16:36:50.037Z",
+      "stops": 5,
+      "distanceKm": 129.7,
+      "co2Saved": "25.34",
+      "fuelCost": "1232",
+      "efficiencyPct": 42
+    },
+    {
+      "id": 1776962319266,
+      "timestamp": "2026-04-23T16:38:39.225Z",
+      "stops": 3,
+      "distanceKm": 8.69,
+      "co2Saved": "0.07",
+      "fuelCost": "83",
+      "efficiencyPct": 2.9
+    },
+    {
+      "id": 1776962335320,
+      "timestamp": "2026-04-23T16:38:55.271Z",
+      "stops": 5,
+      "distanceKm": 33.93,
+      "co2Saved": "0.01",
+      "fuelCost": "322",
+      "efficiencyPct": 0.1
+    },
+    {
+      "id": 1777003437287,
+      "timestamp": "2026-04-24T04:03:56.464Z",
+      "stops": 4,
+      "distanceKm": 10.72,
+      "co2Saved": "2.95",
+      "fuelCost": "143",
+      "efficiencyPct": 42.6
+    },
+    {
+      "id": 1777004161406,
+      "timestamp": "2026-04-24T04:16:00.846Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777004387083,
+      "timestamp": "2026-04-24T04:19:46.509Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777004824231,
+      "timestamp": "2026-04-24T04:27:03.648Z",
+      "stops": 5,
+      "distanceKm": 41.25,
+      "co2Saved": "0.40",
+      "fuelCost": "157",
+      "efficiencyPct": 8.9
+    },
+    {
+      "id": 1777005683417,
+      "timestamp": "2026-04-24T04:41:22.821Z",
+      "stops": 4,
+      "distanceKm": 18.77,
+      "co2Saved": "1.74",
+      "fuelCost": "250",
+      "efficiencyPct": 20.1
+    },
+    {
+      "id": 1777005734941,
+      "timestamp": "2026-04-24T04:42:14.364Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777007593327,
+      "timestamp": "2026-04-24T05:13:12.605Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777007846828,
+      "timestamp": "2026-04-24T05:17:26.063Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777007972714,
+      "timestamp": "2026-04-24T05:19:31.105Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777008069145,
+      "timestamp": "2026-04-24T05:21:08.464Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777008151297,
+      "timestamp": "2026-04-24T05:22:29.385Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777008255754,
+      "timestamp": "2026-04-24T05:24:14.582Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777008821609,
+      "timestamp": "2026-04-24T05:33:40.199Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777008866385,
+      "timestamp": "2026-04-24T05:34:25.006Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777009196172,
+      "timestamp": "2026-04-24T05:39:54.684Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777009252193,
+      "timestamp": "2026-04-24T05:40:50.389Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777009275877,
+      "timestamp": "2026-04-24T05:41:14.752Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777009331894,
+      "timestamp": "2026-04-24T05:42:10.179Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777009805774,
+      "timestamp": "2026-04-24T05:50:03.724Z",
+      "stops": 4,
+      "distanceKm": 23.54,
+      "co2Saved": "0.52",
+      "fuelCost": "313",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777009877471,
+      "timestamp": "2026-04-24T05:51:14.791Z",
+      "stops": 4,
+      "distanceKm": 26.52,
+      "co2Saved": "0.43",
+      "fuelCost": "252",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777009940037,
+      "timestamp": "2026-04-24T05:52:19.251Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010028842,
+      "timestamp": "2026-04-24T05:53:46.710Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010168722,
+      "timestamp": "2026-04-24T05:56:08.035Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010249045,
+      "timestamp": "2026-04-24T05:57:28.265Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010305557,
+      "timestamp": "2026-04-24T05:58:24.468Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010330364,
+      "timestamp": "2026-04-24T05:58:49.726Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010466535,
+      "timestamp": "2026-04-24T06:01:04.860Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010719019,
+      "timestamp": "2026-04-24T06:05:17.978Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010813603,
+      "timestamp": "2026-04-24T06:06:52.888Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010815108,
+      "timestamp": "2026-04-24T06:06:54.543Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010815941,
+      "timestamp": "2026-04-24T06:06:55.343Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010816948,
+      "timestamp": "2026-04-24T06:06:56.306Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010817941,
+      "timestamp": "2026-04-24T06:06:57.280Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010818876,
+      "timestamp": "2026-04-24T06:06:58.254Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777010819837,
+      "timestamp": "2026-04-24T06:06:59.204Z",
+      "stops": 5,
+      "distanceKm": 33.78,
+      "co2Saved": "0.75",
+      "fuelCost": "449",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777011096619,
+      "timestamp": "2026-04-24T06:11:35.818Z",
+      "stops": 4,
+      "distanceKm": 18.12,
+      "co2Saved": "0.82",
+      "fuelCost": "138",
+      "efficiencyPct": 17.8
+    },
+    {
+      "id": 1777011275211,
+      "timestamp": "2026-04-24T06:14:34.283Z",
+      "stops": 4,
+      "distanceKm": 31.96,
+      "co2Saved": "3.33",
+      "fuelCost": "243",
+      "efficiencyPct": 33.2
+    },
+    {
+      "id": 1777045263002,
+      "timestamp": "2026-04-24T15:41:02.271Z",
+      "stops": 4,
+      "distanceKm": 1677.95,
+      "co2Saved": "21.14",
+      "fuelCost": "12752",
+      "efficiencyPct": 5.7
+    },
+    {
+      "id": 1777045320143,
+      "timestamp": "2026-04-24T15:41:59.299Z",
+      "stops": 6,
+      "distanceKm": 1699.48,
+      "co2Saved": "460.97",
+      "fuelCost": "22603",
+      "efficiencyPct": 42.3
+    }
+  ]
+}
